@@ -1,3 +1,5 @@
+<img src="https://inexorabletash.github.io/font-table-access/logo-font-table-access.svg" height=100 align=right>
+
 # Web Font Table Access Explained
 
 > August 14th, 2018<br>
