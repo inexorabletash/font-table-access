@@ -1,0 +1,257 @@
+<pre class=metadata>
+Title: Font Table Access API
+Shortname: FontTables
+Abstract: This specification documents web browser support for
+    allowing users to grant web sites access to the raw table data of
+    fonts, allowing for more detailed custom text rendering.
+Status: DREAM
+Editor: Emil A. Eklund, Google Inc. https://google.com, eae@google.com
+Editor: Alex Russell, Google Inc. https://google.com, slightlyoff@google.com
+Editor: Joshua Bell, Google Inc. https://google.com, jsbell@google.com
+Assume Explicit For: yes
+Markup Shorthands: markdown yes, css yes
+Complain About: accidental-2119 yes, missing-example-ids yes
+Favicon: logo-font-table-access.png
+</pre>
+<!--
+Repository: inexorabletash/font-table-access
+Level: 1
+Group: wicg
+ED: https://wicg.github.io/font-table-access
+Test Suite: https://github.com/web-platform-tests/wpt/tree/master/font-table-access
+-->
+
+<pre class=anchors>
+spec: css-font-loading; urlPrefix: https://drafts.csswg.org/css-font-loading
+    type: dfn
+        text: CSS-connected; url: #css-connected
+spec: ecma262; urlPrefix: https://tc39.github.io/ecma262/
+    type: dfn
+        text: ecma-record; url: #sec-list-and-record-specification-type
+    type: interface
+        text: Map; url: #sec-map-objects
+</pre>
+
+<img src="logo-font-table-access.svg" alt="logo"
+    style="height: 100px; width: 100px; position: absolute; right: 20px; top: 30px;">
+
+<!-- ============================================================ -->
+# Introduction # {#introduction}
+<!-- ============================================================ -->
+
+This specification describes a font table access API which provides low-level (byte-oriented) access to the various OpenType tables of both local and remotely-loaded fonts.
+
+While the web has its origins as a text-focused medium and user agents provide very high quality typography support, they have limitations that impact some classes of web-based applications:
+
+* System font engines (and browser stacks) may handle the parsing and display of certain glyphs differently. These differences are necessary, in general, to create fidelity with the underlying OS (so web content doesn't "look wrong"). These differences reduce fidelity.
+* Web application developers may have legacy font stacks for their applications which they are bringing to the web. To use these engines, they usually require direct access to font data; something Web Fonts do not provide.
+
+
+This API provide high-end tools access to the same underlying data tables that browser layout and rasterization engines use for drawing text. Examples include the OpenType [[!OPENTYPE]] `glyf` table for glyph vector data, the `GPOS` table for glyph placement, and the `GSUB` table for ligatures and other glyph substitution. This information is necessary for these tools in order to guarantee both platform-independence of the resulting output (by embedding vector descriptions rather than codepoints) and to enable font-based art (treating fonts as the basis for manipulated shapes).
+
+
+<!-- ============================================================ -->
+# Goals # {#goals}
+<!-- ============================================================ -->
+
+The API should:
+
+* Provide access to all browser-allowed font tables (may vary per browser)
+* Re-use Web Font types and interfaces to the greatest extent possible
+* Restrict access to local font data to Secure Contexts
+* Be availabile from Workers
+
+<!-- ============================================================ -->
+# Examples # {#examples}
+<!-- ============================================================ -->
+
+*This section is non-normative.*
+
+The API allows script to request the internal tables of fonts.
+
+<aside class=example id=example-font-tables>
+The following code queries the available local fonts, and logs details about each to the console.
+
+Here we use enumeration and new APIs on `FontFace` to access specific OpenType tables of local fonts; we can use this to parse out specific data or feed it into, e.g., WASM version of [HarfBuzz](https://www.freedesktop.org/wiki/Software/HarfBuzz/) or [Freetype](https://www.freetype.org/):
+
+The `navigator.fonts.query()` method is described in [Font Enumeration API](https://inexorabletash.github.io/font-enumeration/).
+
+```js
+(async () => { // Async block
+  // May prompt the user
+  let status = await navigator.permissions.request({ name: "local-fonts" });
+  if (status.state != "granted") {
+    throw new Error("Cannot continue to style with local fonts");
+  }
+  for await (const f of navigator.fonts.query() {
+    // Looking for a specific font:
+    if (f.family !== "Consolas")
+      continue;
+
+    // 'getTables()' returns ArrayBuffers of table data. The default is
+    // to return all available tables. See:
+    //    https://docs.microsoft.com/en-us/typography/opentype/spec/
+    // Here we ask for a subset of the tables:
+    const tables = f.getTables([ "glyf", "cmap", "head" ]);
+
+    // 'tables' is a Map of table names to ArrayBuffers
+    const head = new DataView(tables.get("head"));
+
+    // Parse out the version number of our font:
+    //    https://docs.microsoft.com/en-us/typography/opentype/spec/head
+    const major = head.getInt16(0);
+    const minor = head.getInt16(2);
+    console.log("Consolas version:", (major + (minor/10)));
+  }
+})();
+```
+</aside>
+
+<!-- ============================================================ -->
+# Concepts # {#concepts}
+<!-- ============================================================ -->
+
+<!-- ============================================================ -->
+## Font Representation ## {#concept-font-representation}
+<!-- ============================================================ -->
+
+A <dfn>font representation</dfn> is an OpenType [[!OPENTYPE]] definition of a font. Even if the font was originally described in another file format, it is assumed that if it is supported by a user agent then an OpenType representation can be derived for it. This includes True Type [[TrueType]], Open Font Format [[OPEN-FONT-FORMAT]], WOFF File Format 1.0 [[WOFF]] and WOFF File Format 2.0 [[WOFF2]] files.
+
+<div dfn-for="font representation">
+
+Every {{FontFace}} has a corresponding [=/font representation=]; many {{FontFace}} may share the same [=/font representation=].
+
+A [=/font representation=] has a <dfn>table list</dfn>, a [=/list=] of [=/font tables=].
+
+User agents should validate and sanitize fonts before use, e.g. ensuring that length and offset values are correct.
+
+Note: Malicious font files containing incorrect length and offset values have been used as attack vectors. While user agents defend against this for their own use of fonts, sanitizing data before presenting it to script via this API helps web applications avoid similar problems.
+
+</div>
+
+<!-- ============================================================ -->
+## Font Table ## {#concept-font-table}
+<!-- ============================================================ -->
+
+A <dfn>font table</dfn> is an OpenType [[!OPENTYPE]] table.
+
+<div dfn-for="font table">
+
+A [=/font table=] has a <dfn>tag</dfn>, which is a {{ByteString}} of length 4, derived from the `Tag` of the table record.
+
+A [=/font table=] has <dfn>data bytes</dfn>, which is a [=/byte sequence=] corresponding to the table data.
+
+Issue: Other table metadata, e.g. version numbers?
+
+</dfn>
+
+Table types within the original font file that are not supported by the user agent should be elided from the [=/font representation=]'s [=font representation/table list=] as defined by this specification. Tables with subtables not supported by the user agent should be transcoded to elide those subtables.
+
+Note: For example, if a user agent does not support the `EBDT` table, it will not appear in a [=/font representation=]'s [=font representation/table list=]. If a user agent does not support the platform 1, encoding 0, format 6 subtable of the `cmap` table, the [=/font table=] with the `cmap` [=font table/tag=] will not include it.
+
+
+<!-- ============================================================ -->
+# API # {#api}
+<!-- ============================================================ -->
+
+<!-- ============================================================ -->
+## {{FontFace}} Additions ## {#fontface-additions}
+<!-- ============================================================ -->
+
+<xmp class=idl>
+[Exposed=(Window,Worker)]
+partial interface FontFace {
+  [SecureContext] Promise<Map> getTables(optional sequence<ByteString> tables); // options?
+};
+</xmp>
+
+<div class=algorithm>
+
+The <dfn method for=FontFace>getTables(|tables|)</dfn> method, when invoked, must run these steps:
+
+1. Let |promise| be a new promise.
+1. Let |origin| be **this**’s [=relevant settings object=]'s [=origin=].
+1. If |origin| is an [=opaque origin=], then reject |promise| with a {{TypeError}}.
+1. Otherwise, if |tables| was given but is empty, then reject |promise| with a {{TypeError}}.
+1. Otherwise, run these steps [=in parallel=]:
+    1. Let |permission| be the result of [=requesting permission to use=] `"local-fonts"`.
+    1. If |permission| is not `"granted"`, then reject |promise| with "{{NotAllowedError}}" {{DOMException}}, and abort these steps.
+    1. Let |map| be a new {{Map}}.
+    1. Let |tables| be a new empty [=/list=].
+    1. Let |font| be **this**'s [=/font representation=].
+    1. [=list/For each=] |table| of |font|'s [=font representation/table list=]:
+        1. Let |tag| be |table|'s [=font table/tag=].
+        1. If |tables| was given and does not [=list/contain=] |tag|, then [=iteration/continue=].
+        1. Let |data| be a new {{ArrayBuffer}} containing |table|'s [=font table/data bytes=].
+        1. Append the [=ecma-record|Record=] { \[[Key]]: |tag|, \[[Value]]: |data| } to |map|.\[[MapData]].
+    1. Resolve |promise| with |map|.
+1. Return |promise|.
+
+Issue: Table order? If returned in requested order, what if the |tables| argument is omitted? (Observable by iterating the map.)
+
+</div>
+
+
+<!-- ============================================================ -->
+# Internationalization Considerations # {#i18n}
+<!-- ============================================================ -->
+
+Issue: Document internationalization considerations
+
+<!-- ============================================================ -->
+# Accessibility Considerations # {#a11y}
+<!-- ============================================================ -->
+
+There are no known accessibility impacts of this feature.
+
+<!-- ============================================================ -->
+# Security Considerations # {#security}
+<!-- ============================================================ -->
+
+Issue: Document security considerations, e.g. why tables are filtered, e.g. [Chromium's OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md)
+
+<!-- ============================================================ -->
+# Privacy Considerations # {#privacy}
+<!-- ============================================================ -->
+
+<!-- ============================================================ -->
+## Fingerprinting ## {#privacy-fingerprinting}
+<!-- ============================================================ -->
+
+Local system fonts exposed by user agents to script include:
+
+* Fonts included in the operating system distribution.
+* Fonts installed by particular applications installed on the system, for example office suites.
+* Fonts directly installed by the system administrator and/or end user.
+
+This provides several "bits of entropy" to distinguish users.
+
+User agents could mitigate this in certain cases (e.g. when the permission is denied, or in Private Browsing / "incognito" mode) by providing an enumeration of a fixed set of fonts provided with the user agent, or by transcoding to reduce the data provided by individual tables or subtables within a font.
+
+<!-- ============================================================ -->
+## Identification ## {#privacy-identification}
+<!-- ============================================================ -->
+
+Users from a particular organization could have specific fonts installed. Employees of "Example Co." could all have an "Example Corporate Typeface" installed by their system administrator, which would allow distinguishing users of a site as employees.
+
+There are services which create fonts based on handwriting samples. If these fonts are given names including personally identifiable information (e.g. "Alice's Handwriting Font"), then personally identifiable information would be made available. This may not be apparent to users if the information is included as properties within the font, not just the font name.
+
+
+<!-- ============================================================ -->
+# Acknowledgements # {#acknowledgements}
+<!-- ============================================================ -->
+
+We'd like to acknowledge the contributions of:
+
+* Daniel Nishi, Owen Campbell-Moore, and Mike Tsao who helped pioneer the previous local font access proposal.
+* Evan Wallace, Biru, Leah Cassidy, Katie Gregorio, Morgan Kennedy, and Noah Levin of Figma who have patiently enumerated the needs of their ambitious web product.
+* Tab Atkins and the CSS Working Group who have provided usable base-classes which only need slight extension to enable these cases.
+* Dominik Röttsches and Igor Kopylov for their thoughtful feedback.
+
+Special thanks to Tab Atkins, Jr. for creating and maintaining <a
+href="https://github.com/tabatkins/bikeshed">Bikeshed</a>, the
+specification authoring tool used to create this document.
+
+And thanks to
+...
+for suggestions, reviews, and other feedback.
