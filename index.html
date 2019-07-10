@@ -1029,7 +1029,7 @@ Possible extra rowspan handling
 		}
 	/* } */
 
-	@supports (display:grid) {
+	@supports (display:grid) and (display:contents) {
 		/* Use #toc over .toc to override non-@supports rules. */
 		#toc {
 			display: grid;
@@ -1212,9 +1212,26 @@ Possible extra rowspan handling
 		}
 	}
 </style>
-  <meta content="Bikeshed version 872cce6d3026423d677f3bd5837f1a1a46299a04" name="generator">
+  <meta content="Bikeshed version a3b64e58e069c2e8a9ffcadffb76601231663a47" name="generator">
   <link href="logo-font-table-access.png" rel="icon">
-  <meta content="303d62f14d6c2bee16686764ff267b31c05a26c4" name="document-revision">
+  <meta content="a7daa26fa0c8946e74191b20aab42b6ffb07d117" name="document-revision">
+<style>
+/* Default ED/WD stylesheets set "both"; not needed for logo floated right */
+div.head h1 { clear: left; }
+
+dl.domintro dt {
+    font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
+
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+}
+dl.domintro dt a {
+    color: inherit; border-bottom-style: none;
+}
+dl.domintro dt code {
+    font-size: inherit;
+}
+</style>
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1461,7 +1478,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Font Table Access API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2019-07-09">9 July 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2019-07-10">10 July 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Issue Tracking:
@@ -1476,7 +1493,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" src="https://licensebuttons.net/p/zero/1.0/80x15.png"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 9 July 2019,
+In addition, as of 10 July 2019,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -1484,10 +1501,7 @@ Parts of this work may be from another specification document.  If so, those par
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This specification documents web browser support for
-
-    allowing users to grant web sites access to the raw table data of
-    fonts, allowing for more detailed custom text rendering.</p>
+   <p>This specification documents web browser support for allowing users to grant web sites access to the raw table data of fonts, allowing for more detailed custom text rendering.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <nav data-fill-with="table-of-contents" id="toc">
@@ -1505,13 +1519,13 @@ Parts of this work may be from another specification document.  If so, those par
     <li>
      <a href="#api"><span class="secno">5</span> <span class="content">API</span></a>
      <ol class="toc">
-      <li><a href="#fontface-additions"><span class="secno">5.1</span> <span class="content"><code class="idl"><span>FontFace</span></code> Additions</span></a>
+      <li><a href="#fontface-additions"><span class="secno">5.1</span> <span class="content"><code class="idl"><span>FontFace</span></code> additions</span></a>
      </ol>
-    <li><a href="#i18n"><span class="secno">6</span> <span class="content">Internationalization Considerations</span></a>
-    <li><a href="#a11y"><span class="secno">7</span> <span class="content">Accessibility Considerations</span></a>
-    <li><a href="#security"><span class="secno">8</span> <span class="content">Security Considerations</span></a>
+    <li><a href="#i18n"><span class="secno">6</span> <span class="content">Internationalization considerations</span></a>
+    <li><a href="#a11y"><span class="secno">7</span> <span class="content">Accessibility considerations</span></a>
+    <li><a href="#security"><span class="secno">8</span> <span class="content">Security considerations</span></a>
     <li>
-     <a href="#privacy"><span class="secno">9</span> <span class="content">Privacy Considerations</span></a>
+     <a href="#privacy"><span class="secno">9</span> <span class="content">Privacy considerations</span></a>
      <ol class="toc">
       <li><a href="#privacy-fingerprinting"><span class="secno">9.1</span> <span class="content">Fingerprinting</span></a>
       <li><a href="#privacy-identification"><span class="secno">9.2</span> <span class="content">Identification</span></a>
@@ -1556,7 +1570,7 @@ Parts of this work may be from another specification document.  If so, those par
     <li data-md>
      <p>Restrict access to local font data to Secure Contexts</p>
     <li data-md>
-     <p>Be availabile from Workers</p>
+     <p>Be available from Workers</p>
    </ul>
    <h2 class="heading settled" data-level="3" id="examples"><span class="secno">3. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
    <p><em>This section is non-normative.</em></p>
@@ -1613,10 +1627,16 @@ Parts of this work may be from another specification document.  If so, those par
     <p>Table types within the original font file that are not supported by the user agent should be elided from the <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation③">font representation</a>'s <a data-link-type="dfn" href="#font-representation-table-list" id="ref-for-font-representation-table-list">table list</a> as defined by this specification. Tables with subtables not supported by the user agent should be transcoded to elide those subtables.</p>
     <p class="note" role="note"><span>Note:</span> For example, if a user agent does not support the <code>EBDT</code> table, it will not appear in a <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation④">font representation</a>'s <a data-link-type="dfn" href="#font-representation-table-list" id="ref-for-font-representation-table-list①">table list</a>. If a user agent does not support the platform 1, encoding 0, format 6 subtable of the <code>cmap</code> table, the <a data-link-type="dfn" href="#font-table" id="ref-for-font-table③">font table</a> with the <code>cmap</code> <a data-link-type="dfn" href="#font-table-tag" id="ref-for-font-table-tag">tag</a> will not include it.</p>
     <h2 class="heading settled" data-level="5" id="api"><span class="secno">5. </span><span class="content">API</span><a class="self-link" href="#api"></a></h2>
-    <h3 class="heading settled" data-level="5.1" id="fontface-additions"><span class="secno">5.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface②">FontFace</a></code> Additions</span><a class="self-link" href="#fontface-additions"></a></h3>
+    <h3 class="heading settled" data-level="5.1" id="fontface-additions"><span class="secno">5.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface②">FontFace</a></code> additions</span><a class="self-link" href="#fontface-additions"></a></h3>
+    <dl class="domintro note">
+     <dt data-md>await <var>map</var> = <var>fontFace</var> . <code class="idl"><a data-link-type="idl" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables">getTables</a></code>()
+     <dt data-md>await <var>map</var> = <var>fontFace</var> . <code class="idl"><a data-link-type="idl" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables①">getTables</a></code>(<var>tableNames</var>)
+     <dd data-md>
+      <p>Request the internal tables of <var>fontFace</var>. The result <var>map</var> is a <code class="idl"><a data-link-type="idl" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects">Map</a></code> where the keys are matching table names and the values are <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer">ArrayBuffer</a></code>s with the table binary data. If <var>tableNames</var> is not specified, all tables are returned.</p>
+    </dl>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->)]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface③"><c- g>FontFace</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①"><c- b>ByteString</c-></a>> <dfn class="idl-code" data-dfn-for="FontFace/getTables(tables), FontFace/getTables()" data-dfn-type="argument" data-export id="dom-fontface-gettables-tables-tables"><code><c- g>tables</c-></code><a class="self-link" href="#dom-fontface-gettables-tables-tables"></a></dfn>); // options?
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables②"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①"><c- b>ByteString</c-></a>> <dfn class="idl-code" data-dfn-for="FontFace/getTables(tables), FontFace/getTables()" data-dfn-type="argument" data-export id="dom-fontface-gettables-tables-tables"><code><c- g>tables</c-></code><a class="self-link" href="#dom-fontface-gettables-tables-tables"></a></dfn>); // options?
 };
 </pre>
     <div class="algorithm">
@@ -1636,9 +1656,9 @@ Parts of this work may be from another specification document.  If so, those par
         <li data-md>
          <p>Let <var>permission</var> be the result of <a data-link-type="dfn" href="https://w3c.github.io/permissions/#request-permission-to-use" id="ref-for-request-permission-to-use">requesting permission to use</a> <code>"local-fonts"</code>.</p>
         <li data-md>
-         <p>If <var>permission</var> is not <code>"granted"</code>, then reject <var>promise</var> with "<code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror">NotAllowedError</a></code>" <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-DOMException" id="ref-for-idl-DOMException">DOMException</a></code>, and abort these steps.</p>
+         <p>If <var>permission</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted">"granted"</a></code>, then reject <var>promise</var> with a "<code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror">NotAllowedError</a></code>" <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-DOMException" id="ref-for-idl-DOMException">DOMException</a></code>, and abort these steps.</p>
         <li data-md>
-         <p>Let <var>map</var> be a new <code class="idl"><a data-link-type="idl" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①">Map</a></code>.</p>
+         <p>Let <var>map</var> be a new <code class="idl"><a data-link-type="idl" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects②">Map</a></code>.</p>
         <li data-md>
          <p>Let <var>tables</var> be a new empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a>.</p>
         <li data-md>
@@ -1651,7 +1671,7 @@ Parts of this work may be from another specification document.  If so, those par
           <li data-md>
            <p>If <var>tables</var> was given and does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain">contain</a> <var>tag</var>, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue">continue</a>.</p>
           <li data-md>
-           <p>Let <var>data</var> be a new <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer">ArrayBuffer</a></code> containing <var>table</var>’s <a data-link-type="dfn" href="#font-table-data-bytes" id="ref-for-font-table-data-bytes">data bytes</a>.</p>
+           <p>Let <var>data</var> be a new <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer①">ArrayBuffer</a></code> containing <var>table</var>’s <a data-link-type="dfn" href="#font-table-data-bytes" id="ref-for-font-table-data-bytes">data bytes</a>.</p>
           <li data-md>
            <p>Append the <a data-link-type="dfn" href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type" id="ref-for-sec-list-and-record-specification-type">Record</a> { [[Key]]: <var>tag</var>, [[Value]]: <var>data</var> } to <var>map</var>.[[MapData]].</p>
          </ol>
@@ -1663,13 +1683,13 @@ Parts of this work may be from another specification document.  If so, those par
      </ol>
      <p class="issue" id="issue-d513829e"><a class="self-link" href="#issue-d513829e"></a> Table order? If returned in requested order, what if the <var>tables</var> argument is omitted? (Observable by iterating the map.)</p>
     </div>
-    <h2 class="heading settled" data-level="6" id="i18n"><span class="secno">6. </span><span class="content">Internationalization Considerations</span><a class="self-link" href="#i18n"></a></h2>
+    <h2 class="heading settled" data-level="6" id="i18n"><span class="secno">6. </span><span class="content">Internationalization considerations</span><a class="self-link" href="#i18n"></a></h2>
     <p class="issue" id="issue-167fd5a6"><a class="self-link" href="#issue-167fd5a6"></a> Document internationalization considerations</p>
-    <h2 class="heading settled" data-level="7" id="a11y"><span class="secno">7. </span><span class="content">Accessibility Considerations</span><a class="self-link" href="#a11y"></a></h2>
+    <h2 class="heading settled" data-level="7" id="a11y"><span class="secno">7. </span><span class="content">Accessibility considerations</span><a class="self-link" href="#a11y"></a></h2>
     <p>There are no known accessibility impacts of this feature.</p>
-    <h2 class="heading settled" data-level="8" id="security"><span class="secno">8. </span><span class="content">Security Considerations</span><a class="self-link" href="#security"></a></h2>
+    <h2 class="heading settled" data-level="8" id="security"><span class="secno">8. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h2>
     <p class="issue" id="issue-286d6895"><a class="self-link" href="#issue-286d6895"></a> Document security considerations, e.g. why tables are filtered, e.g. <a href="https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md">Chromium’s OTS</a></p>
-    <h2 class="heading settled" data-level="9" id="privacy"><span class="secno">9. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy"></a></h2>
+    <h2 class="heading settled" data-level="9" id="privacy"><span class="secno">9. </span><span class="content">Privacy considerations</span><a class="self-link" href="#privacy"></a></h2>
     <h3 class="heading settled" data-level="9.1" id="privacy-fingerprinting"><span class="secno">9.1. </span><span class="content">Fingerprinting</span><a class="self-link" href="#privacy-fingerprinting"></a></h3>
     <p>Local system fonts exposed by user agents to script include:</p>
     <ul>
@@ -1697,8 +1717,7 @@ Parts of this work may be from another specification document.  If so, those par
      <li data-md>
       <p>Dominik Röttsches and Igor Kopylov for their thoughtful feedback.</p>
     </ul>
-    <p>Special thanks to Tab Atkins, Jr. for creating and maintaining <a href="https://github.com/tabatkins/bikeshed">Bikeshed</a>, the
-specification authoring tool used to create this document.</p>
+    <p>Special thanks to Tab Atkins, Jr. for creating and maintaining <a href="https://github.com/tabatkins/bikeshed">Bikeshed</a>, the specification authoring tool used to create this document.</p>
     <p>And thanks to
 ...
 for suggestions, reviews, and other feedback.</p>
@@ -1865,43 +1884,43 @@ for suggestions, reviews, and other feedback.</p>
    <a href="https://drafts.csswg.org/css-font-loading-3/#fontface">https://drafts.csswg.org/css-font-loading-3/#fontface</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fontface">4.1. Font Representation</a> <a href="#ref-for-fontface①">(2)</a>
-    <li><a href="#ref-for-fontface②">5.1. FontFace Additions</a> <a href="#ref-for-fontface③">(2)</a>
+    <li><a href="#ref-for-fontface②">5.1. FontFace additions</a> <a href="#ref-for-fontface③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-sec-map-objects">
    <a href="https://tc39.github.io/ecma262/#sec-map-objects">https://tc39.github.io/ecma262/#sec-map-objects</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-sec-map-objects">5.1. FontFace Additions</a> <a href="#ref-for-sec-map-objects①">(2)</a>
+    <li><a href="#ref-for-sec-map-objects">5.1. FontFace additions</a> <a href="#ref-for-sec-map-objects①">(2)</a> <a href="#ref-for-sec-map-objects②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-sec-list-and-record-specification-type">
    <a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">https://tc39.github.io/ecma262/#sec-list-and-record-specification-type</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-sec-list-and-record-specification-type">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-sec-list-and-record-specification-type">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-in-parallel">
    <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel">https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-in-parallel">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-in-parallel">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-origin-opaque">
    <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque">https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-origin-opaque">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-concept-origin-opaque">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-origin">
    <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">https://html.spec.whatwg.org/multipage/origin.html#concept-origin</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-origin">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-concept-origin">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-relevant-settings-object">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-relevant-settings-object">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-relevant-settings-object">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-byte-sequence">
@@ -1913,75 +1932,81 @@ for suggestions, reviews, and other feedback.</p>
   <aside class="dfn-panel" data-for="term-for-list-contain">
    <a href="https://infra.spec.whatwg.org/#list-contain">https://infra.spec.whatwg.org/#list-contain</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-contain">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-list-contain">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-iteration-continue">
    <a href="https://infra.spec.whatwg.org/#iteration-continue">https://infra.spec.whatwg.org/#iteration-continue</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-iteration-continue">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-iteration-continue">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-iterate">
    <a href="https://infra.spec.whatwg.org/#list-iterate">https://infra.spec.whatwg.org/#list-iterate</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-iterate">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-list-iterate">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list">
    <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list">4.1. Font Representation</a>
-    <li><a href="#ref-for-list①">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-list①">5.1. FontFace additions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-permissionstate-granted">
+   <a href="https://w3c.github.io/permissions/#dom-permissionstate-granted">https://w3c.github.io/permissions/#dom-permissionstate-granted</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-permissionstate-granted">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-request-permission-to-use">
    <a href="https://w3c.github.io/permissions/#request-permission-to-use">https://w3c.github.io/permissions/#request-permission-to-use</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-request-permission-to-use">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-request-permission-to-use">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-ArrayBuffer">
    <a href="https://heycam.github.io/webidl/#idl-ArrayBuffer">https://heycam.github.io/webidl/#idl-ArrayBuffer</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-ArrayBuffer">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-idl-ArrayBuffer">5.1. FontFace additions</a> <a href="#ref-for-idl-ArrayBuffer①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-ByteString">
    <a href="https://heycam.github.io/webidl/#idl-ByteString">https://heycam.github.io/webidl/#idl-ByteString</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-ByteString">4.2. Font Table</a>
-    <li><a href="#ref-for-idl-ByteString①">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-idl-ByteString①">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-DOMException">
    <a href="https://heycam.github.io/webidl/#idl-DOMException">https://heycam.github.io/webidl/#idl-DOMException</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-DOMException">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-idl-DOMException">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-Exposed">
    <a href="https://heycam.github.io/webidl/#Exposed">https://heycam.github.io/webidl/#Exposed</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-Exposed">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-Exposed">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-notallowederror">
    <a href="https://heycam.github.io/webidl/#notallowederror">https://heycam.github.io/webidl/#notallowederror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-notallowederror">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-notallowederror">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-SecureContext">
    <a href="https://heycam.github.io/webidl/#SecureContext">https://heycam.github.io/webidl/#SecureContext</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-SecureContext">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-SecureContext">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
    <a href="https://heycam.github.io/webidl/#exceptiondef-typeerror">https://heycam.github.io/webidl/#exceptiondef-typeerror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-exceptiondef-typeerror">5.1. FontFace Additions</a> <a href="#ref-for-exceptiondef-typeerror①">(2)</a>
+    <li><a href="#ref-for-exceptiondef-typeerror">5.1. FontFace additions</a> <a href="#ref-for-exceptiondef-typeerror①">(2)</a>
    </ul>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
@@ -2017,6 +2042,7 @@ for suggestions, reviews, and other feedback.</p>
    <li>
     <a data-link-type="biblio">[permissions]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-dom-permissionstate-granted" style="color:initial">"granted"</span>
      <li><span class="dfn-paneled" id="term-for-request-permission-to-use" style="color:initial">requesting permission to use</span>
     </ul>
    <li>
@@ -2063,7 +2089,7 @@ for suggestions, reviews, and other feedback.</p>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->)]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface③①"><c- g>FontFace</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects②"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables①"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①①"><c- b>ByteString</c-></a>> <a href="#dom-fontface-gettables-tables-tables"><code><c- g>tables</c-></code></a>); // options?
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①①"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables②①"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①①"><c- b>ByteString</c-></a>> <a href="#dom-fontface-gettables-tables-tables"><code><c- g>tables</c-></code></a>); // options?
 };
 
 </pre>
@@ -2079,14 +2105,14 @@ for suggestions, reviews, and other feedback.</p>
    <ul>
     <li><a href="#ref-for-font-representation">4.1. Font Representation</a> <a href="#ref-for-font-representation①">(2)</a> <a href="#ref-for-font-representation②">(3)</a>
     <li><a href="#ref-for-font-representation③">4.2. Font Table</a> <a href="#ref-for-font-representation④">(2)</a>
-    <li><a href="#ref-for-font-representation⑤">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-font-representation⑤">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="font-representation-table-list">
    <b><a href="#font-representation-table-list">#font-representation-table-list</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-font-representation-table-list">4.2. Font Table</a> <a href="#ref-for-font-representation-table-list①">(2)</a>
-    <li><a href="#ref-for-font-representation-table-list②">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-font-representation-table-list②">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="font-table">
@@ -2100,19 +2126,19 @@ for suggestions, reviews, and other feedback.</p>
    <b><a href="#font-table-tag">#font-table-tag</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-font-table-tag">4.2. Font Table</a>
-    <li><a href="#ref-for-font-table-tag①">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-font-table-tag①">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="font-table-data-bytes">
    <b><a href="#font-table-data-bytes">#font-table-data-bytes</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-font-table-data-bytes">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-font-table-data-bytes">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-fontface-gettables">
    <b><a href="#dom-fontface-gettables">#dom-fontface-gettables</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-fontface-gettables">5.1. FontFace Additions</a>
+    <li><a href="#ref-for-dom-fontface-gettables">5.1. FontFace additions</a> <a href="#ref-for-dom-fontface-gettables①">(2)</a> <a href="#ref-for-dom-fontface-gettables②">(3)</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */

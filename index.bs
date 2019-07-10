@@ -1,9 +1,7 @@
 <pre class=metadata>
 Title: Font Table Access API
 Shortname: FontTables
-Abstract: This specification documents web browser support for
-    allowing users to grant web sites access to the raw table data of
-    fonts, allowing for more detailed custom text rendering.
+Abstract: This specification documents web browser support for allowing users to grant web sites access to the raw table data of fonts, allowing for more detailed custom text rendering.
 Status: DREAM
 Editor: Emil A. Eklund, Google Inc. https://google.com, eae@google.com
 Editor: Alex Russell, Google Inc. https://google.com, slightlyoff@google.com
@@ -22,15 +20,31 @@ Test Suite: https://github.com/web-platform-tests/wpt/tree/master/font-table-acc
 -->
 
 <pre class=anchors>
-spec: css-font-loading; urlPrefix: https://drafts.csswg.org/css-font-loading
-    type: dfn
-        text: CSS-connected; url: #css-connected
 spec: ecma262; urlPrefix: https://tc39.github.io/ecma262/
     type: dfn
         text: ecma-record; url: #sec-list-and-record-specification-type
     type: interface
         text: Map; url: #sec-map-objects
 </pre>
+
+<style>
+/* Default ED/WD stylesheets set "both"; not needed for logo floated right */
+div.head h1 { clear: left; }
+
+dl.domintro dt {
+    font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
+
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+}
+dl.domintro dt a {
+    color: inherit; border-bottom-style: none;
+}
+dl.domintro dt code {
+    font-size: inherit;
+}
+</style>
+
 
 <img src="logo-font-table-access.svg" alt="logo"
     style="height: 100px; width: 100px; position: absolute; right: 20px; top: 30px;">
@@ -59,7 +73,7 @@ The API should:
 * Provide access to all browser-allowed font tables (may vary per browser)
 * Re-use Web Font types and interfaces to the greatest extent possible
 * Restrict access to local font data to Secure Contexts
-* Be availabile from Workers
+* Be available from Workers
 
 <!-- ============================================================ -->
 # Examples # {#examples}
@@ -155,8 +169,14 @@ Note: For example, if a user agent does not support the `EBDT` table, it will no
 <!-- ============================================================ -->
 
 <!-- ============================================================ -->
-## {{FontFace}} Additions ## {#fontface-additions}
+## {{FontFace}} additions ## {#fontface-additions}
 <!-- ============================================================ -->
+
+<dl class="domintro note">
+    : await |map| = |fontFace| . {{FontFace/getTables}}()
+    : await |map| = |fontFace| . {{FontFace/getTables}}(|tableNames|)
+    :: Request the internal tables of |fontFace|. The result |map| is a {{Map}} where the keys are matching table names and the values are {{ArrayBuffer}}s with the table binary data. If |tableNames| is not specified, all tables are returned.
+</dl>
 
 <xmp class=idl>
 [Exposed=(Window,Worker)]
@@ -175,7 +195,7 @@ The <dfn method for=FontFace>getTables(|tables|)</dfn> method, when invoked, mus
 1. Otherwise, if |tables| was given but is empty, then reject |promise| with a {{TypeError}}.
 1. Otherwise, run these steps [=in parallel=]:
     1. Let |permission| be the result of [=requesting permission to use=] `"local-fonts"`.
-    1. If |permission| is not `"granted"`, then reject |promise| with "{{NotAllowedError}}" {{DOMException}}, and abort these steps.
+    1. If |permission| is not {{PermissionState/"granted"}}, then reject |promise| with a "{{NotAllowedError}}" {{DOMException}}, and abort these steps.
     1. Let |map| be a new {{Map}}.
     1. Let |tables| be a new empty [=/list=].
     1. Let |font| be **this**'s [=/font representation=].
@@ -193,25 +213,25 @@ Issue: Table order? If returned in requested order, what if the |tables| argumen
 
 
 <!-- ============================================================ -->
-# Internationalization Considerations # {#i18n}
+# Internationalization considerations # {#i18n}
 <!-- ============================================================ -->
 
 Issue: Document internationalization considerations
 
 <!-- ============================================================ -->
-# Accessibility Considerations # {#a11y}
+# Accessibility considerations # {#a11y}
 <!-- ============================================================ -->
 
 There are no known accessibility impacts of this feature.
 
 <!-- ============================================================ -->
-# Security Considerations # {#security}
+# Security considerations # {#security}
 <!-- ============================================================ -->
 
 Issue: Document security considerations, e.g. why tables are filtered, e.g. [Chromium's OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md)
 
 <!-- ============================================================ -->
-# Privacy Considerations # {#privacy}
+# Privacy considerations # {#privacy}
 <!-- ============================================================ -->
 
 <!-- ============================================================ -->
@@ -248,9 +268,7 @@ We'd like to acknowledge the contributions of:
 * Tab Atkins and the CSS Working Group who have provided usable base-classes which only need slight extension to enable these cases.
 * Dominik Röttsches and Igor Kopylov for their thoughtful feedback.
 
-Special thanks to Tab Atkins, Jr. for creating and maintaining <a
-href="https://github.com/tabatkins/bikeshed">Bikeshed</a>, the
-specification authoring tool used to create this document.
+Special thanks to Tab Atkins, Jr. for creating and maintaining [Bikeshed](https://github.com/tabatkins/bikeshed), the specification authoring tool used to create this document.
 
 And thanks to
 ...
