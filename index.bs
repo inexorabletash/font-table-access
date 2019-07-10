@@ -132,7 +132,7 @@ The `navigator.fonts.query()` method is described in [Font Enumeration API](http
 ## Font Representation ## {#concept-font-representation}
 <!-- ============================================================ -->
 
-A <dfn>font representation</dfn> is an OpenType [[!OPENTYPE]] definition of a font. Even if the font was originally described in another file format, it is assumed that if it is supported by a user agent then an OpenType representation can be derived for it. This includes True Type [[TrueType]], Open Font Format [[OPEN-FONT-FORMAT]], WOFF File Format 1.0 [[WOFF]] and WOFF File Format 2.0 [[WOFF2]] files.
+A <dfn>font representation</dfn> is an OpenType [[!OPENTYPE]] definition of a font. Even if the font was originally described in another file format, it is assumed that if it is supported by a user agent then an OpenType representation can be derived for it. This includes True Type [[TrueType]], Web Open Font Format 1.0 [[WOFF]] and Web Open Font Format 2.0 [[WOFF2]] files.
 
 <div dfn-for="font representation">
 

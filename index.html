@@ -1214,7 +1214,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version a3b64e58e069c2e8a9ffcadffb76601231663a47" name="generator">
   <link href="logo-font-table-access.png" rel="icon">
-  <meta content="90310718b0906eeb594bdec87d2e99031fd0cebc" name="document-revision">
+  <meta content="c620488069923491f480fc7057a3339d5dc7e50d" name="document-revision">
 <style>
 /* Default ED/WD stylesheets set "both"; not needed for logo floated right */
 div.head h1 { clear: left; }
@@ -1610,7 +1610,7 @@ Parts of this work may be from another specification document.  If so, those par
    </aside>
    <h2 class="heading settled" data-level="4" id="concepts"><span class="secno">4. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="concept-font-representation"><span class="secno">4.1. </span><span class="content">Font Representation</span><a class="self-link" href="#concept-font-representation"></a></h3>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="font-representation">font representation</dfn> is an OpenType <a data-link-type="biblio" href="#biblio-opentype">[OPENTYPE]</a> definition of a font. Even if the font was originally described in another file format, it is assumed that if it is supported by a user agent then an OpenType representation can be derived for it. This includes True Type <a data-link-type="biblio" href="#biblio-truetype">[TrueType]</a>, Open Font Format <a data-link-type="biblio" href="#biblio-open-font-format">[OPEN-FONT-FORMAT]</a>, WOFF File Format 1.0 <a data-link-type="biblio" href="#biblio-woff">[WOFF]</a> and WOFF File Format 2.0 <a data-link-type="biblio" href="#biblio-woff2">[WOFF2]</a> files.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="font-representation">font representation</dfn> is an OpenType <a data-link-type="biblio" href="#biblio-opentype">[OPENTYPE]</a> definition of a font. Even if the font was originally described in another file format, it is assumed that if it is supported by a user agent then an OpenType representation can be derived for it. This includes True Type <a data-link-type="biblio" href="#biblio-truetype">[TrueType]</a>, Web Open Font Format 1.0 <a data-link-type="biblio" href="#biblio-woff">[WOFF]</a> and Web Open Font Format 2.0 <a data-link-type="biblio" href="#biblio-woff2">[WOFF2]</a> files.</p>
    <div>
     <p>Every <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface①">FontFace</a></code> has a corresponding <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation">font representation</a>; many <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface②">FontFace</a></code> may share the same <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation①">font representation</a>.</p>
     <p>A <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation②">font representation</a> has a <dfn class="dfn-paneled" data-dfn-for="font representation" data-dfn-type="dfn" data-noexport id="font-representation-table-list">table list</dfn>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn" href="#font-table" id="ref-for-font-table">font tables</a>.</p>
@@ -2093,8 +2093,6 @@ for suggestions, reviews, and other feedback.</p>
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
-   <dt id="biblio-open-font-format">[OPEN-FONT-FORMAT]
-   <dd><a href="http://standards.iso.org/ittf/PubliclyAvailableStandards/c052136_ISO_IEC_14496-22_2009%28E%29.zip">Information technology — Coding of audio-visual objects — Part 22: Open Font Format</a>. URL: <a href="http://standards.iso.org/ittf/PubliclyAvailableStandards/c052136_ISO_IEC_14496-22_2009%28E%29.zip">http://standards.iso.org/ittf/PubliclyAvailableStandards/c052136_ISO_IEC_14496-22_2009%28E%29.zip</a>
    <dt id="biblio-truetype">[TrueType]
    <dd><a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/">TrueType™ Reference Manual</a>. URL: <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/">https://developer.apple.com/fonts/TrueType-Reference-Manual/</a>
    <dt id="biblio-woff">[WOFF]
