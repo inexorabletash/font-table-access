@@ -25,6 +25,9 @@ spec: ecma262; urlPrefix: https://tc39.github.io/ecma262/
         text: ecma-record; url: #sec-list-and-record-specification-type
     type: interface
         text: Map; url: #sec-map-objects
+spec: font-enumeration; urlPrefix: https://inexorabletash.github.io/font-enumeration/
+    type: enum-value
+        for: PermissionName; text: "local-fonts"; url: #dom-permissionname-local-fonts
 </pre>
 
 <style>
@@ -86,7 +89,7 @@ The API allows script to request the internal tables of fonts.
 <aside class=example id=example-font-tables>
 The following code queries the available local fonts, and logs details about each to the console.
 
-Here we use enumeration and new APIs on `FontFace` to access specific OpenType tables of local fonts; we can use this to parse out specific data or feed it into, e.g., WASM version of [HarfBuzz](https://www.freedesktop.org/wiki/Software/HarfBuzz/) or [Freetype](https://www.freetype.org/):
+Here we use enumeration and new APIs on {{FontFace}} to access specific OpenType tables of local fonts; we can use this to parse out specific data or feed it into, e.g., WASM version of [HarfBuzz](https://www.freedesktop.org/wiki/Software/HarfBuzz/) or [Freetype](https://www.freetype.org/):
 
 The `navigator.fonts.query()` method is described in [Font Enumeration API](https://inexorabletash.github.io/font-enumeration/).
 
@@ -181,33 +184,32 @@ Note: For example, if a user agent does not support the `EBDT` table, it will no
 <xmp class=idl>
 [Exposed=(Window,Worker)]
 partial interface FontFace {
-  [SecureContext] Promise<Map> getTables(optional sequence<ByteString> tables); // options?
+  [SecureContext] Promise<Map> getTables(optional sequence<ByteString> tableNames);
 };
 </xmp>
 
 <div class=algorithm>
 
-The <dfn method for=FontFace>getTables(|tables|)</dfn> method, when invoked, must run these steps:
+The <dfn method for=FontFace>getTables(|tableNames|)</dfn> method, when invoked, must run these steps:
 
 1. Let |promise| be a new promise.
 1. Let |origin| be **this**’s [=relevant settings object=]'s [=origin=].
 1. If |origin| is an [=opaque origin=], then reject |promise| with a {{TypeError}}.
-1. Otherwise, if |tables| was given but is empty, then reject |promise| with a {{TypeError}}.
+1. Otherwise, if |tableNames| was given but is [=list/empty=], then reject |promise| with a {{TypeError}}.
 1. Otherwise, run these steps [=in parallel=]:
-    1. Let |permission| be the result of [=requesting permission to use=] `"local-fonts"`.
+    1. Let |permission| be the result of [=requesting permission to use=] {{PermissionName/"local-fonts"}}.
     1. If |permission| is not {{PermissionState/"granted"}}, then reject |promise| with a "{{NotAllowedError}}" {{DOMException}}, and abort these steps.
     1. Let |map| be a new {{Map}}.
-    1. Let |tables| be a new empty [=/list=].
     1. Let |font| be **this**'s [=/font representation=].
     1. [=list/For each=] |table| of |font|'s [=font representation/table list=]:
         1. Let |tag| be |table|'s [=font table/tag=].
-        1. If |tables| was given and does not [=list/contain=] |tag|, then [=iteration/continue=].
+        1. If |tableNames| was given and does not [=list/contain=] |tag|, then [=iteration/continue=].
         1. Let |data| be a new {{ArrayBuffer}} containing |table|'s [=font table/data bytes=].
         1. Append the [=ecma-record|Record=] { \[[Key]]: |tag|, \[[Value]]: |data| } to |map|.\[[MapData]].
     1. Resolve |promise| with |map|.
 1. Return |promise|.
 
-Issue: Table order? If returned in requested order, what if the |tables| argument is omitted? (Observable by iterating the map.)
+Issue: Table order? If returned in requested order, what if the |tableNames| argument is omitted? (Observable by iterating the map.)
 
 </div>
 

@@ -1214,7 +1214,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version a3b64e58e069c2e8a9ffcadffb76601231663a47" name="generator">
   <link href="logo-font-table-access.png" rel="icon">
-  <meta content="3f4bce698e76daa44a981895b45374894503da67" name="document-revision">
+  <meta content="90310718b0906eeb594bdec87d2e99031fd0cebc" name="document-revision">
 <style>
 /* Default ED/WD stylesheets set "both"; not needed for logo floated right */
 div.head h1 { clear: left; }
@@ -1577,7 +1577,7 @@ Parts of this work may be from another specification document.  If so, those par
    <p>The API allows script to request the internal tables of fonts.</p>
    <aside class="example" id="example-font-tables">
     <a class="self-link" href="#example-font-tables"></a> The following code queries the available local fonts, and logs details about each to the console. 
-    <p>Here we use enumeration and new APIs on <code>FontFace</code> to access specific OpenType tables of local fonts; we can use this to parse out specific data or feed it into, e.g., WASM version of <a href="https://www.freedesktop.org/wiki/Software/HarfBuzz/">HarfBuzz</a> or <a href="https://www.freetype.org/">Freetype</a>:</p>
+    <p>Here we use enumeration and new APIs on <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface">FontFace</a></code> to access specific OpenType tables of local fonts; we can use this to parse out specific data or feed it into, e.g., WASM version of <a href="https://www.freedesktop.org/wiki/Software/HarfBuzz/">HarfBuzz</a> or <a href="https://www.freetype.org/">Freetype</a>:</p>
     <p>The <code>navigator.fonts.query()</code> method is described in <a href="https://inexorabletash.github.io/font-enumeration/">Font Enumeration API</a>.</p>
 <pre class="language-js highlight"><c- p>(</c->async <c- p>()</c-> <c- p>=></c-> <c- p>{</c-> <c- c1>// Async block</c->
   <c- c1>// May prompt the user</c->
@@ -1612,7 +1612,7 @@ Parts of this work may be from another specification document.  If so, those par
    <h3 class="heading settled" data-level="4.1" id="concept-font-representation"><span class="secno">4.1. </span><span class="content">Font Representation</span><a class="self-link" href="#concept-font-representation"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="font-representation">font representation</dfn> is an OpenType <a data-link-type="biblio" href="#biblio-opentype">[OPENTYPE]</a> definition of a font. Even if the font was originally described in another file format, it is assumed that if it is supported by a user agent then an OpenType representation can be derived for it. This includes True Type <a data-link-type="biblio" href="#biblio-truetype">[TrueType]</a>, Open Font Format <a data-link-type="biblio" href="#biblio-open-font-format">[OPEN-FONT-FORMAT]</a>, WOFF File Format 1.0 <a data-link-type="biblio" href="#biblio-woff">[WOFF]</a> and WOFF File Format 2.0 <a data-link-type="biblio" href="#biblio-woff2">[WOFF2]</a> files.</p>
    <div>
-    <p>Every <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface">FontFace</a></code> has a corresponding <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation">font representation</a>; many <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface①">FontFace</a></code> may share the same <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation①">font representation</a>.</p>
+    <p>Every <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface①">FontFace</a></code> has a corresponding <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation">font representation</a>; many <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface②">FontFace</a></code> may share the same <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation①">font representation</a>.</p>
     <p>A <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation②">font representation</a> has a <dfn class="dfn-paneled" data-dfn-for="font representation" data-dfn-type="dfn" data-noexport id="font-representation-table-list">table list</dfn>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn" href="#font-table" id="ref-for-font-table">font tables</a>.</p>
     <p>User agents should validate and sanitize fonts before use, e.g. ensuring that length and offset values are correct.</p>
     <p class="note" role="note"><span>Note:</span> Malicious font files containing incorrect length and offset values have been used as attack vectors. While user agents defend against this for their own use of fonts, sanitizing data before presenting it to script via this API helps web applications avoid similar problems.</p>
@@ -1627,7 +1627,7 @@ Parts of this work may be from another specification document.  If so, those par
     <p>Table types within the original font file that are not supported by the user agent should be elided from the <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation③">font representation</a>'s <a data-link-type="dfn" href="#font-representation-table-list" id="ref-for-font-representation-table-list">table list</a> as defined by this specification. Tables with subtables not supported by the user agent should be transcoded to elide those subtables.</p>
     <p class="note" role="note"><span>Note:</span> For example, if a user agent does not support the <code>EBDT</code> table, it will not appear in a <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation④">font representation</a>'s <a data-link-type="dfn" href="#font-representation-table-list" id="ref-for-font-representation-table-list①">table list</a>. If a user agent does not support the platform 1, encoding 0, format 6 subtable of the <code>cmap</code> table, the <a data-link-type="dfn" href="#font-table" id="ref-for-font-table③">font table</a> with the <code>cmap</code> <a data-link-type="dfn" href="#font-table-tag" id="ref-for-font-table-tag">tag</a> will not include it.</p>
     <h2 class="heading settled" data-level="5" id="api"><span class="secno">5. </span><span class="content">API</span><a class="self-link" href="#api"></a></h2>
-    <h3 class="heading settled" data-level="5.1" id="fontface-additions"><span class="secno">5.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface②">FontFace</a></code> additions</span><a class="self-link" href="#fontface-additions"></a></h3>
+    <h3 class="heading settled" data-level="5.1" id="fontface-additions"><span class="secno">5.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface③">FontFace</a></code> additions</span><a class="self-link" href="#fontface-additions"></a></h3>
     <dl class="domintro note">
      <dt data-md>await <var>map</var> = <var>fontFace</var> . <code class="idl"><a data-link-type="idl" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables">getTables</a></code>()
      <dt data-md>await <var>map</var> = <var>fontFace</var> . <code class="idl"><a data-link-type="idl" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables①">getTables</a></code>(<var>tableNames</var>)
@@ -1635,12 +1635,12 @@ Parts of this work may be from another specification document.  If so, those par
       <p>Request the internal tables of <var>fontFace</var>. The result <var>map</var> is a <code class="idl"><a data-link-type="idl" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects">Map</a></code> where the keys are matching table names and the values are <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer">ArrayBuffer</a></code>s with the table binary data. If <var>tableNames</var> is not specified, all tables are returned.</p>
     </dl>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->)]
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface③"><c- g>FontFace</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables②"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①"><c- b>ByteString</c-></a>> <dfn class="idl-code" data-dfn-for="FontFace/getTables(tables), FontFace/getTables()" data-dfn-type="argument" data-export id="dom-fontface-gettables-tables-tables"><code><c- g>tables</c-></code><a class="self-link" href="#dom-fontface-gettables-tables-tables"></a></dfn>); // options?
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface④"><c- g>FontFace</c-></a> {
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables②"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①"><c- b>ByteString</c-></a>> <dfn class="idl-code" data-dfn-for="FontFace/getTables(tableNames), FontFace/getTables()" data-dfn-type="argument" data-export id="dom-fontface-gettables-tablenames-tablenames"><code><c- g>tableNames</c-></code><a class="self-link" href="#dom-fontface-gettables-tablenames-tablenames"></a></dfn>);
 };
 </pre>
     <div class="algorithm">
-     <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FontFace" data-dfn-type="method" data-export data-lt="getTables(tables)|getTables()" id="dom-fontface-gettables"><code>getTables(<var>tables</var>)</code></dfn> method, when invoked, must run these steps:</p>
+     <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FontFace" data-dfn-type="method" data-export data-lt="getTables(tableNames)|getTables()" id="dom-fontface-gettables"><code>getTables(<var>tableNames</var>)</code></dfn> method, when invoked, must run these steps:</p>
      <ol>
       <li data-md>
        <p>Let <var>promise</var> be a new promise.</p>
@@ -1649,18 +1649,16 @@ Parts of this work may be from another specification document.  If so, those par
       <li data-md>
        <p>If <var>origin</var> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>, then reject <var>promise</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>.</p>
       <li data-md>
-       <p>Otherwise, if <var>tables</var> was given but is empty, then reject <var>promise</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
+       <p>Otherwise, if <var>tableNames</var> was given but is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty">empty</a>, then reject <var>promise</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
       <li data-md>
        <p>Otherwise, run these steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel">in parallel</a>:</p>
        <ol>
         <li data-md>
-         <p>Let <var>permission</var> be the result of <a data-link-type="dfn" href="https://w3c.github.io/permissions/#request-permission-to-use" id="ref-for-request-permission-to-use">requesting permission to use</a> <code>"local-fonts"</code>.</p>
+         <p>Let <var>permission</var> be the result of <a data-link-type="dfn" href="https://w3c.github.io/permissions/#request-permission-to-use" id="ref-for-request-permission-to-use">requesting permission to use</a> <code class="idl"><a data-link-type="idl" href="https://inexorabletash.github.io/font-enumeration/#dom-permissionname-local-fonts" id="ref-for-dom-permissionname-local-fonts">"local-fonts"</a></code>.</p>
         <li data-md>
          <p>If <var>permission</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted">"granted"</a></code>, then reject <var>promise</var> with a "<code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror">NotAllowedError</a></code>" <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-DOMException" id="ref-for-idl-DOMException">DOMException</a></code>, and abort these steps.</p>
         <li data-md>
          <p>Let <var>map</var> be a new <code class="idl"><a data-link-type="idl" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects②">Map</a></code>.</p>
-        <li data-md>
-         <p>Let <var>tables</var> be a new empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a>.</p>
         <li data-md>
          <p>Let <var>font</var> be <strong>this</strong>'s <a data-link-type="dfn" href="#font-representation" id="ref-for-font-representation⑤">font representation</a>.</p>
         <li data-md>
@@ -1669,7 +1667,7 @@ Parts of this work may be from another specification document.  If so, those par
           <li data-md>
            <p>Let <var>tag</var> be <var>table</var>’s <a data-link-type="dfn" href="#font-table-tag" id="ref-for-font-table-tag①">tag</a>.</p>
           <li data-md>
-           <p>If <var>tables</var> was given and does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain">contain</a> <var>tag</var>, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue">continue</a>.</p>
+           <p>If <var>tableNames</var> was given and does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain">contain</a> <var>tag</var>, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue">continue</a>.</p>
           <li data-md>
            <p>Let <var>data</var> be a new <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer①">ArrayBuffer</a></code> containing <var>table</var>’s <a data-link-type="dfn" href="#font-table-data-bytes" id="ref-for-font-table-data-bytes">data bytes</a>.</p>
           <li data-md>
@@ -1681,7 +1679,7 @@ Parts of this work may be from another specification document.  If so, those par
       <li data-md>
        <p>Return <var>promise</var>.</p>
      </ol>
-     <p class="issue" id="issue-d513829e"><a class="self-link" href="#issue-d513829e"></a> Table order? If returned in requested order, what if the <var>tables</var> argument is omitted? (Observable by iterating the map.)</p>
+     <p class="issue" id="issue-1c3c09e5"><a class="self-link" href="#issue-1c3c09e5"></a> Table order? If returned in requested order, what if the <var>tableNames</var> argument is omitted? (Observable by iterating the map.)</p>
     </div>
     <h2 class="heading settled" data-level="6" id="i18n"><span class="secno">6. </span><span class="content">Internationalization considerations</span><a class="self-link" href="#i18n"></a></h2>
     <p class="issue" id="issue-167fd5a6"><a class="self-link" href="#issue-167fd5a6"></a> Document internationalization considerations</p>
@@ -1876,15 +1874,16 @@ for suggestions, reviews, and other feedback.</p>
    <li><a href="#font-representation">font representation</a><span>, in §4.1</span>
    <li><a href="#font-table">font table</a><span>, in §4.2</span>
    <li><a href="#dom-fontface-gettables">getTables()</a><span>, in §5.1</span>
-   <li><a href="#dom-fontface-gettables">getTables(tables)</a><span>, in §5.1</span>
+   <li><a href="#dom-fontface-gettables">getTables(tableNames)</a><span>, in §5.1</span>
    <li><a href="#font-representation-table-list">table list</a><span>, in §4.1</span>
    <li><a href="#font-table-tag">tag</a><span>, in §4.2</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-fontface">
    <a href="https://drafts.csswg.org/css-font-loading-3/#fontface">https://drafts.csswg.org/css-font-loading-3/#fontface</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fontface">4.1. Font Representation</a> <a href="#ref-for-fontface①">(2)</a>
-    <li><a href="#ref-for-fontface②">5.1. FontFace additions</a> <a href="#ref-for-fontface③">(2)</a>
+    <li><a href="#ref-for-fontface">3. Examples</a>
+    <li><a href="#ref-for-fontface①">4.1. Font Representation</a> <a href="#ref-for-fontface②">(2)</a>
+    <li><a href="#ref-for-fontface③">5.1. FontFace additions</a> <a href="#ref-for-fontface④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-sec-map-objects">
@@ -1897,6 +1896,12 @@ for suggestions, reviews, and other feedback.</p>
    <a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">https://tc39.github.io/ecma262/#sec-list-and-record-specification-type</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-sec-list-and-record-specification-type">5.1. FontFace additions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-permissionname-local-fonts">
+   <a href="https://inexorabletash.github.io/font-enumeration/#dom-permissionname-local-fonts">https://inexorabletash.github.io/font-enumeration/#dom-permissionname-local-fonts</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-permissionname-local-fonts">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-in-parallel">
@@ -1941,6 +1946,12 @@ for suggestions, reviews, and other feedback.</p>
     <li><a href="#ref-for-iteration-continue">5.1. FontFace additions</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-list-empty">
+   <a href="https://infra.spec.whatwg.org/#list-empty">https://infra.spec.whatwg.org/#list-empty</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-list-empty">5.1. FontFace additions</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-list-iterate">
    <a href="https://infra.spec.whatwg.org/#list-iterate">https://infra.spec.whatwg.org/#list-iterate</a><b>Referenced in:</b>
    <ul>
@@ -1951,7 +1962,6 @@ for suggestions, reviews, and other feedback.</p>
    <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list">4.1. Font Representation</a>
-    <li><a href="#ref-for-list①">5.1. FontFace additions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-granted">
@@ -2023,6 +2033,11 @@ for suggestions, reviews, and other feedback.</p>
      <li><span class="dfn-paneled" id="term-for-sec-list-and-record-specification-type" style="color:initial">ecma-record</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[font-enumeration]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-dom-permissionname-local-fonts" style="color:initial">"local-fonts"</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-in-parallel" style="color:initial">in parallel</span>
@@ -2036,6 +2051,7 @@ for suggestions, reviews, and other feedback.</p>
      <li><span class="dfn-paneled" id="term-for-byte-sequence" style="color:initial">byte sequence</span>
      <li><span class="dfn-paneled" id="term-for-list-contain" style="color:initial">contain</span>
      <li><span class="dfn-paneled" id="term-for-iteration-continue" style="color:initial">continue</span>
+     <li><span class="dfn-paneled" id="term-for-list-empty" style="color:initial">empty</span>
      <li><span class="dfn-paneled" id="term-for-list-iterate" style="color:initial">for each</span>
      <li><span class="dfn-paneled" id="term-for-list" style="color:initial">list</span>
     </ul>
@@ -2088,15 +2104,15 @@ for suggestions, reviews, and other feedback.</p>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->)]
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface③①"><c- g>FontFace</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①①"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables②①"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①①"><c- b>ByteString</c-></a>> <a href="#dom-fontface-gettables-tables-tables"><code><c- g>tables</c-></code></a>); // options?
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://drafts.csswg.org/css-font-loading-3/#fontface" id="ref-for-fontface④①"><c- g>FontFace</c-></a> {
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>] <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://tc39.github.io/ecma262/#sec-map-objects" id="ref-for-sec-map-objects①①"><c- n>Map</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fontface-gettables" id="ref-for-dom-fontface-gettables②①"><c- g>getTables</c-></a>(<c- b>optional</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ByteString" id="ref-for-idl-ByteString①①"><c- b>ByteString</c-></a>> <a href="#dom-fontface-gettables-tablenames-tablenames"><code><c- g>tableNames</c-></code></a>);
 };
 
 </pre>
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
    <div class="issue"> Other table metadata, e.g. version numbers?<a href="#issue-beb338fb"> ↵ </a></div>
-   <div class="issue"> Table order? If returned in requested order, what if the <var>tables</var> argument is omitted? (Observable by iterating the map.)<a href="#issue-d513829e"> ↵ </a></div>
+   <div class="issue"> Table order? If returned in requested order, what if the <var>tableNames</var> argument is omitted? (Observable by iterating the map.)<a href="#issue-1c3c09e5"> ↵ </a></div>
    <div class="issue"> Document internationalization considerations<a href="#issue-167fd5a6"> ↵ </a></div>
    <div class="issue"> Document security considerations, e.g. why tables are filtered, e.g. <a href="https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md">Chromium’s OTS</a><a href="#issue-286d6895"> ↵ </a></div>
   </div>
