@@ -1,6 +1,6 @@
 <img src="https://inexorabletash.github.io/font-table-access/logo-font-table-access.svg" height=100 align=right>
 
-# Web Font Table Access Explained
+# Font Table Access Explained
 
 > August 14th, 2018<br>
 > Last Update: July 8, 2019
@@ -21,7 +21,7 @@ One stumbling block has been an inability to access and use the full variety of 
 We propose two cooperating APIs to help address this gap:
 
  * A [font-enumeration API](https://github.com/inexorabletash/font-enumeration) which may, optionally, allow users to grant access to the full set of available system fonts in addition to network fonts
- * A font-table-access API which provides low-level (byte-oriented) access to the various [TrueType/OpenType](https://docs.microsoft.com/en-us/typography/opentype/spec/otff#font-tables) tables of both local and remotely-loaded fonts
+ * A font-table-access API which provides low-level (byte-oriented) access to the various [TrueType/OpenType](https://docs.microsoft.com/en-us/typography/opentype/spec/otff#font-tables) tables of local
 
 Taken together, these APIs provide high-end tools access to the same underlying data tables that browser layout and rasterization engines use for drawing text. Such as the [glyf](https://docs.microsoft.com/en-us/typography/opentype/spec/glyf) table for glyph vector data, the GPOS table for glyph placement, and the GSUB table for ligatures and other glyph substitution. This information is necessary for these tools in order to guarantee both platform-independence of the resulting output (by embedding vector descriptions rather than codepoints) and to enable font-based art (treating fonts as the basis for manipulated shapes).
 
@@ -36,10 +36,10 @@ A successful API should enable:
  * Restrict access to local font data to Secure Contexts
  * Availability from Workers
 
-#### Possible Goals
+#### Possible/Future Goals
 
  * Registration of new font families via the Tables API (extensibility)
-
+ * Access to font tables for web (network-loaded) fonts
 
 ### Non-goals
 
@@ -66,23 +66,25 @@ Here we use enumeration and new APIs on `FontFace` to access specific OpenType t
   if (status.state != "granted") {
     throw new Error("Cannot continue to style with local fonts");
   }
-  for await (let f of navigator.fonts.query({
-                        family: "Consolas.*",
-                        local: true,
-                      })) {
-    // `getTables` returns ArrayBuffers of table data. The default is
+  for await (const f of navigator.fonts.query() {
+    // Looking for a specific font:
+    if (f.family !== "Consolas")
+      continue;
+
+    // 'getTables()' returns ArrayBuffers of table data. The default is
     // to return all available tables. See:
     //    https://docs.microsoft.com/en-us/typography/opentype/spec/
     // Here we ask for a subset of the tables:
-    f.getTables(["glyf", "cmap", "head"], {/*options*/}).then((tables) => {
-      // `tables` is a Map of table names to ArrayBuffers
-      let head = new DataView(tables.get("head"));
-      // Parse out the version number of our font:
-      //    https://docs.microsoft.com/en-us/typography/opentype/spec/head
-      let major = head.getInt16(0);
-      let minor = head.getInt16(2);
-      console.log("Consolas version:", (major + (minor/10)));
-    });
+    const tables = await f.getTables([ "glyf", "cmap", "head" ]);
+
+    // 'tables' is a Map of table names to ArrayBuffers
+    const head = new DataView(tables.get("head"));
+
+    // Parse out the version number of our font:
+    //    https://docs.microsoft.com/en-us/typography/opentype/spec/head
+    const major = head.getInt16(0);
+    const minor = head.getInt16(2);
+    console.log("Consolas version:", (major + (minor/10)));
   }
 })();
 ```

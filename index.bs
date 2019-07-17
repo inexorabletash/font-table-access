@@ -109,7 +109,7 @@ The `navigator.fonts.query()` method is described in [Font Enumeration API](http
     // to return all available tables. See:
     //    https://docs.microsoft.com/en-us/typography/opentype/spec/
     // Here we ask for a subset of the tables:
-    const tables = f.getTables([ "glyf", "cmap", "head" ]);
+    const tables = await f.getTables([ "glyf", "cmap", "head" ]);
 
     // 'tables' is a Map of table names to ArrayBuffers
     const head = new DataView(tables.get("head"));
@@ -140,10 +140,6 @@ Every {{FontFace}} has a corresponding [=/font representation=]; many {{FontFace
 
 A [=/font representation=] has a <dfn>table list</dfn>, a [=/list=] of [=/font tables=].
 
-User agents should validate and sanitize fonts before use, e.g. ensuring that length and offset values are correct.
-
-Note: Malicious font files containing incorrect length and offset values have been used as attack vectors. While user agents defend against this for their own use of fonts, sanitizing data before presenting it to script via this API helps web applications avoid similar problems.
-
 </div>
 
 <!-- ============================================================ -->
@@ -157,8 +153,6 @@ A <dfn>font table</dfn> is an OpenType [[!OPENTYPE]] table.
 A [=/font table=] has a <dfn>tag</dfn>, which is a {{ByteString}} of length 4, derived from the `Tag` of the table record.
 
 A [=/font table=] has <dfn>data bytes</dfn>, which is a [=/byte sequence=] corresponding to the table data.
-
-Issue: Other table metadata, e.g. version numbers?
 
 </dfn>
 
@@ -179,6 +173,10 @@ Note: For example, if a user agent does not support the `EBDT` table, it will no
     : await |map| = |fontFace| . {{FontFace/getTables}}()
     : await |map| = |fontFace| . {{FontFace/getTables}}(|tableNames|)
     :: Request the internal tables of |fontFace|. The result |map| is a {{Map}} where the keys are matching table names and the values are {{ArrayBuffer}}s with the table binary data. If |tableNames| is not specified, all tables are returned.
+
+        This method is only usable for local fonts, and will throw an exception if called for a web font.
+
+
 </dl>
 
 <xmp class=idl>
@@ -193,8 +191,7 @@ partial interface FontFace {
 The <dfn method for=FontFace>getTables(|tableNames|)</dfn> method, when invoked, must run these steps:
 
 1. Let |promise| be a new promise.
-1. Let |origin| be **this**’s [=relevant settings object=]'s [=origin=].
-1. If |origin| is an [=opaque origin=], then reject |promise| with a {{TypeError}}.
+1. Otherwise, if either of **this**'s {{FontFace/[[Urls]]}} or {{FontFace/[[Data]]}} slots are not null, then reject |promise| with a {{TypeError}}.
 1. Otherwise, if |tableNames| was given but is [=list/empty=], then reject |promise| with a {{TypeError}}.
 1. Otherwise, run these steps [=in parallel=]:
     1. Let |permission| be the result of [=requesting permission to use=] {{PermissionName/"local-fonts"}}.
@@ -230,7 +227,13 @@ There are no known accessibility impacts of this feature.
 # Security considerations # {#security}
 <!-- ============================================================ -->
 
-Issue: Document security considerations, e.g. why tables are filtered, e.g. [Chromium's OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md)
+Malicious font files containing incorrect length and offset values have been used as attack vectors. User agents should validate and sanitize fonts, e.g. ensuring that length and offset values are correct.
+
+While user agents defend against this for their own use of fonts, sanitizing data before presenting it to script via this API helps web applications avoid similar problems.
+
+Tables unknown to a user agent cannot be sanitized, and should therefore not be present in the [=/font representation=].
+
+Note: [Chromium's OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) defines the tables and subtables which are supported in that browser engine, implicitly defining the allow-list for font tables.
 
 <!-- ============================================================ -->
 # Privacy considerations # {#privacy}
@@ -267,11 +270,12 @@ We'd like to acknowledge the contributions of:
 
 * Daniel Nishi, Owen Campbell-Moore, and Mike Tsao who helped pioneer the previous local font access proposal.
 * Evan Wallace, Biru, Leah Cassidy, Katie Gregorio, Morgan Kennedy, and Noah Levin of Figma who have patiently enumerated the needs of their ambitious web product.
-* Tab Atkins and the CSS Working Group who have provided usable base-classes which only need slight extension to enable these cases.
-* Dominik Röttsches and Igor Kopylov for their thoughtful feedback.
+* Tab Atkins, Jr. and the CSS Working Group who have provided usable base-classes which only need slight extension to enable these cases.
 
-Special thanks to Tab Atkins, Jr. for creating and maintaining [Bikeshed](https://github.com/tabatkins/bikeshed), the specification authoring tool used to create this document.
+Special thanks (again!) to Tab Atkins, Jr. for creating and maintaining [Bikeshed](https://github.com/tabatkins/bikeshed), the specification authoring tool used to create this document.
 
 And thanks to
-...
+Chase Phillips,
+Dominik Röttsches, and
+Igor Kopylov
 for suggestions, reviews, and other feedback.
