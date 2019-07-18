@@ -77,6 +77,7 @@ The API should:
 * Re-use Web Font types and interfaces to the greatest extent possible
 * Restrict access to local font data to Secure Contexts
 * Be available from Workers
+* Enable a memory efficient implementation, avoiding leaks and copies by design
 
 <!-- ============================================================ -->
 # Examples # {#examples}

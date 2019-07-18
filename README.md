@@ -29,27 +29,27 @@ This document focuses on the latter API - **a font-table-access API**.
 
 ### Goals
 
-A successful API should enable:
+A successful API should:
 
- * Access to all [browser-allowed font tables](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) (may vary per browser)
- * Re-use of Web Font types and interfaces to the greatest extent possible
+ * Enable access to all [browser-allowed font tables](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) (may vary per browser)
+ * Re-use Web Font types and interfaces to the greatest extent possible
  * Restrict access to local font data to Secure Contexts
- * Availability from Workers
+ * Be availabile from Workers
+ * Enable a memory efficient implementation, avoiding leaks and copies by design
 
 #### Possible/Future Goals
 
- * Registration of new font families via the Tables API (extensibility)
  * Access to font tables for web (network-loaded) fonts
 
 ### Non-goals
 
 These APIs will not try to:
 
- * Fully describe how font loading works within the web platform. Fonts are a complex topic and Web Font loading implicates aspects of layout and style recalculation which are not at this time pluggable. As this design isn't addressing those aspects, we will not describe font application or CSS recalculation semantics
- * Describe or provide full access to an existing WOFF/TTF/PS parser
- * Normalize differences in resulting font tables across implementations (see previous point). The resulting font families, variations, and tables that will be exposed will have been processed by browser-provided parsers, but we will not describe or constrain them. For instance, if a library like [OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) reduces the available information for a font, this spec will not require implementations to do more than they already would or provide alternative ways of getting such information back from the source font files.
- * Provide raw access to the raw bytes of underlying WOFF/TTF/PS font files or describe their locations on disk
- * Standardize font family detection or grouping
+ * Fully describe how font loading works within the web platform. Fonts are a complex topic and Web Font loading implicates aspects of layout and style recalculation which are not at this time pluggable. As this design isn't addressing those aspects, we will not describe font application or CSS recalculation semantics.
+ * Describe or provide full access to an existing WOFF/TTF/PS parser.
+ * Provide access to the underlying WOFF/TTF/PS font files or describe their locations on disk.
+ * Provide a guarantee that the set of available tables or their content matches the font on disk byte to byte.
+ * Normalize differences in processed font tables across browser implementations. The font tables that will be exposed will have been processed by browser-provided parsers, but we will not describe or constrain them. For instance, if a library like [OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) reduces the available information for a font, this spec will not require implementations to do more than they already would or provide alternative ways of getting such information back from the source font files.
 
 ## Key scenarios
 
