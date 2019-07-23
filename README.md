@@ -27,6 +27,8 @@ Taken together, these APIs provide high-end tools access to the same underlying 
 
 This document focuses on the latter API - **a font-table-access API**.
 
+> NOTE: Long term, we expect that this proposal would merge into an existing CSS-related spec rather than stand on its own.
+
 ### Goals
 
 A successful API should:
@@ -93,10 +95,17 @@ Here we use enumeration and new APIs on `FontFace` to access specific OpenType t
 
 Several aspects of this design need validation:
 
-  - `FontFace` objects provide a lot of metadata synchronously, by default. Is this a problem?
-  - The arguments to `getTables()` could easily be done a dozen different ways. Feedback appreciated.
-  - This design tries to address concerns with `FontFaceSet` and friends at the cost of introducing a new API surface.
-  - It isn't strictly clear that providing table-by-table access is the best choice.
+* `FontFace` objects provide a lot of metadata synchronously, by default. Is this a problem?
+* The arguments to `getTables()` could easily be done a dozen different ways. Feedback appreciated.
+* This design tries to address concerns with `FontFaceSet` and friends at the cost of introducing a new API surface.
+* It isn't strictly clear that providing table-by-table access is the best choice.
+* The specifics of table filtering (i.e. what tables/subtables are included) is left up to user agents.
+
+
+Other issues that feedback is needed on:
+
+* Enumeration order of the returned table map needs to be defined.
+
 
 ### Privacy and Security Considerations
 
@@ -124,13 +133,13 @@ Chromium embeds FreeType and Harfbuzz to handle font parsing, font metrics compu
 
 The following references have been invaluable:
 
-  - [MSDN DirectWrite overview](https://docs.microsoft.com/en-us/windows/desktop/directwrite/introducing-directwrite#accessing-the-font-system)
-  - [OpenType Specification](https://docs.microsoft.com/en-us/typography/opentype/spec/)
-  - [OpenType Font Table overview](https://docs.microsoft.com/en-us/typography/opentype/spec/chapter2)
+* [MSDN DirectWrite overview](https://docs.microsoft.com/en-us/windows/desktop/directwrite/introducing-directwrite#accessing-the-font-system)
+* [OpenType Specification](https://docs.microsoft.com/en-us/typography/opentype/spec/)
+* [OpenType Font Table overview](https://docs.microsoft.com/en-us/typography/opentype/spec/chapter2)
 
 We'd like to acknowledge the contributions of:
 
-  - Daniel Nishi, Owen Campbell-Moore, and Mike Tsao who helped pioneer the previous local font access proposal
-  - Evan Wallace, Biru, Leah Cassidy, Katie Gregorio, Morgan Kennedy, and Noah Levin of Figma who have patiently enumerated the needs of their ambitious web product.
-  - Tab Atkins and the CSS Working Group who have provided usable base-classes which only need slight extension to enable these cases
-  - Dominik Röttsches and Igor Kopylov for their thoughtful feedback
+* Daniel Nishi, Owen Campbell-Moore, and Mike Tsao who helped pioneer the previous local font access proposal
+* Evan Wallace, Biru, Leah Cassidy, Katie Gregorio, Morgan Kennedy, and Noah Levin of Figma who have patiently enumerated the needs of their ambitious web product.
+* Tab Atkins and the CSS Working Group who have provided usable base-classes which only need slight extension to enable these cases
+* Dominik Röttsches and Igor Kopylov for their thoughtful feedback
