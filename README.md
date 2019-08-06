@@ -3,7 +3,7 @@
 # Font Table Access Explained
 
 > August 14th, 2018<br>
-> Last Update: July 8, 2019
+> Last Update: August 6th, 2019
 >
 > Alex Russell <code>&lt;slightlyoff@google.com&gt;</code><br>
 > Emil A Eklund <code>&lt;eae@google.com&gt;</code><br>
@@ -22,9 +22,9 @@ One stumbling block has been an inability to access and use the full variety of 
 We propose two cooperating APIs to help address this gap:
 
  * A [font-enumeration API](https://github.com/inexorabletash/font-enumeration) which may, optionally, allow users to grant access to the full set of available system fonts in addition to network fonts
- * A font-table-access API (this proposal) which provides low-level (byte-oriented) access to the various [TrueType/OpenType](https://docs.microsoft.com/en-us/typography/opentype/spec/otff#font-tables) tables of local
+ * A font-table-access API (this proposal) which provides low-level (byte-oriented) access to the various [TrueType/OpenType](https://docs.microsoft.com/en-us/typography/opentype/spec/otff#font-tables) tables of local fonts
 
-Taken together, these APIs provide high-end tools access to the same underlying data tables that browser layout and rasterization engines use for drawing text. Such as the [glyf](https://docs.microsoft.com/en-us/typography/opentype/spec/glyf) table for glyph vector data, the GPOS table for glyph placement, and the GSUB table for ligatures and other glyph substitution. This information is necessary for these tools in order to guarantee both platform-independence of the resulting output (by embedding vector descriptions rather than codepoints) and to enable font-based art (treating fonts as the basis for manipulated shapes).
+Taken together, these APIs provide high-end tools access to the same underlying data tables that browser layout and rasterization engines use for drawing text. Examples of these data tables include the [glyf](https://docs.microsoft.com/en-us/typography/opentype/spec/glyf) table for glyph vector data, the GPOS table for glyph placement, and the GSUB table for ligatures and other glyph substitution. This information is necessary for these tools in order to guarantee both platform-independence of the resulting output (by embedding vector descriptions rather than codepoints) and to enable font-based art (treating fonts as the basis for manipulated shapes).
 
 This document focuses on the latter API - **a font-table-access API**.
 
@@ -37,7 +37,7 @@ A successful API should:
  * Enable access to all [browser-allowed font tables](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) (may vary per browser)
  * Re-use Web Font types and interfaces to the greatest extent possible
  * Restrict access to local font data to Secure Contexts
- * Be availabile from Workers
+ * Be available from Workers
  * Enable a memory efficient implementation, avoiding leaks and copies by design
 
 #### Possible/Future Goals
@@ -56,7 +56,7 @@ These APIs will not try to:
 
 ## Key scenarios
 
-> Note: Earlier versions of this document attempted to sketch out two versions of each API; one based on `FontFaceSource` and the other the fully-asynchronous verison that survives in this doc. While attractive from a re-use perspective, [`FontFaceSource`](https://drafts.csswg.org/css-font-loading/#font-face-source) (and the implied global `window.fonts`) implies synchronous iteration over a potentially unbounded (and perhaps slow) set of files, and each item may require synchronous IPCs and I/O. This, combined with the lack of implementations of `FontFaceSource` caused us to abandon this approach.
+> Note: Earlier versions of this document attempted to sketch out two versions of each API; one based on `FontFaceSource` and the other the fully-asynchronous version that survives in this doc. While attractive from a re-use perspective, [`FontFaceSource`](https://drafts.csswg.org/css-font-loading/#font-face-source) (and the implied global `window.fonts`) implies synchronous iteration over a potentially unbounded (and perhaps slow) set of files, and each item may require synchronous IPCs and I/O. This, combined with the lack of implementations of `FontFaceSource` caused us to abandon this approach.
 
 ### Accessing Font Tables
 
