@@ -4,15 +4,17 @@ Questions from https://www.w3.org/TR/security-privacy-questionnaire/
 
 ## 2.1. What information might this feature expose to Web sites or other parties, and for what purposes is that exposure necessary?
 
-This feature intentionally reveals a list of local fonts to the Web site. This can include common fonts, fonts purchased from type foundries, or even custom fonts such as personal handwriting fonts.
+This feature intentionally reveals data contained in a local font to the Web site. Requesting a specific font can test for the existence of that font on a system, which can expose common fonts, fonts purchased from type foundries, or even custom fonts such as personal handwriting fonts.
 
-Browsers currently provide for the use of local fonts, but not enumeration. For example, the CSS `font-family` property can be used to request the use of a local font by name. If the font is not available, the browser will provide a fallback. Through the use of measurement APIs, it is usually possible to determine if the requested font or a fallback was used. Given a dictionary of font names, this can be used to determine which are available on a user's system.
+In addition, the data returned in the tables can include metadata about the font, as well as the actual font contents.  Providing access to this information is necessary in order to correctly render text using the font.
+
+Browsers currently provide for the use of local fonts, but not table access. For example, the CSS `font-family` property can be used to request the use of a local font by name. If the font is not available, the browser will provide a fallback. Through the use of measurement APIs, it is usually possible to determine if the requested font or a fallback was used. Given a dictionary of font names, this can be used to determine which are available on a user's system.
 
 The feature will require the user to grant permission before providing the data to a site.
 
 ## 2.2. Is this specification exposing the minimum amount of information necessary to power the feature?
 
-The feature exposes the names and a handful of additional properties of each font. For example, the name, "PostScript" name, metrics, color and variability information. These are needed by Web applications that will present a list of fonts to users - e.g. illustration tools - to group and classify options. Some of these properties would also be available indirectly e.g. through measurement APIs.
+The feature exposes font data for a given font. From this information, an application may be able to detect the font's presence on a system, read the font's metadata, or access the font's core data used for rendering. Some of these properties would also be available indirectly e.g. through measurement APIs.
 
 ## 2.3. How does this specification deal with personal information or personally-identifiable information or information derived thereof?
 
@@ -38,13 +40,15 @@ Furthermore, the user will be able to revoke permission to clear the state that 
 
 ## 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
 
-The font list includes:
+Font table access provides overall access to the raw data stored in a font's tables.  This information includes all of the information about a specific font, including:
 
-* Fonts included in the operating system distribution.
-* Fonts installed by particular applications installed on the system, for example office suites.
-* Fonts directly installed by the system administrator and/or end user.
+* The presence or absence of the font on a system, or whether the font is at least not available in a given User Agent
+* Metadata contained in a font's tables, including its various names, color and variability data, and copyright information
+* The raw table data used in OpenType fonts (e.g. the cmap table, etc)
+* The raw table data used in TrueType or CFF fonts (e.g. 'CFF2' or 'glyf' tables, etc)
+* Any other valid tables contained in the font beyond what may be required for traditional font rendering
 
-This will identify the operating system and version and potentially some installed applications.
+From this information, it may be possible to identify the operating system and version and potentially some installed applications.
 
 ## 2.7. Does this specification allow an origin access to sensors on a user’s device
 
