@@ -8,6 +8,7 @@
 > Alex Russell <code>&lt;slightlyoff@google.com&gt;</code><br>
 > Emil A Eklund <code>&lt;eae@google.com&gt;</code><br>
 > Josh Bell <code>&lt;jsbell@google.com&gt;</code><br>
+> Chase Phillips <code>&lt;cmp@google.com&gt;</code><br>
 
 ## What’s all this then?
 
@@ -21,7 +22,7 @@ One stumbling block has been an inability to access and use the full variety of 
 We propose two cooperating APIs to help address this gap:
 
  * A [font-enumeration API](https://github.com/inexorabletash/font-enumeration) which may, optionally, allow users to grant access to the full set of available system fonts in addition to network fonts
- * A font-table-access API which provides low-level (byte-oriented) access to the various [TrueType/OpenType](https://docs.microsoft.com/en-us/typography/opentype/spec/otff#font-tables) tables of local
+ * A font-table-access API (this proposal) which provides low-level (byte-oriented) access to the various [TrueType/OpenType](https://docs.microsoft.com/en-us/typography/opentype/spec/otff#font-tables) tables of local
 
 Taken together, these APIs provide high-end tools access to the same underlying data tables that browser layout and rasterization engines use for drawing text. Such as the [glyf](https://docs.microsoft.com/en-us/typography/opentype/spec/glyf) table for glyph vector data, the GPOS table for glyph placement, and the GSUB table for ligatures and other glyph substitution. This information is necessary for these tools in order to guarantee both platform-independence of the resulting output (by embedding vector descriptions rather than codepoints) and to enable font-based art (treating fonts as the basis for manipulated shapes).
 
