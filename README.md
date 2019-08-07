@@ -69,7 +69,7 @@ Here we use enumeration and new APIs on `FontFace` to access specific OpenType t
   if (status.state != "granted") {
     throw new Error("Cannot continue to style with local fonts");
   }
-  for await (const f of navigator.fonts.query() {
+  for await (const f of navigator.fonts.query()) {
     // Looking for a specific font:
     if (f.family !== "Consolas")
       continue;
