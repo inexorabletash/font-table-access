@@ -66,7 +66,7 @@ Here we use enumeration and new APIs on `FontFace` to access specific OpenType t
 (async () => { // Async block
   // May prompt the user
   let status = await navigator.permissions.request({ name: "local-fonts" });
-  if (status.state != "granted") {
+  if (status.state !== "granted") {
     throw new Error("Cannot continue to style with local fonts");
   }
   for await (const f of navigator.fonts.query()) {
