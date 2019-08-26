@@ -36,7 +36,7 @@ A successful API should:
 
  * Enable access to all [browser-allowed font tables](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) (may vary per browser)
  * Re-use Web Font types and interfaces to the greatest extent possible
- * Restrict access to local font data to Secure Contexts
+ * Restrict access to local font data to Secure Contexts and to only the top-most frame by default via the [Feature Policy](https://wicg.github.io/feature-policy) spec
  * Be available from Workers
  * Enable a memory efficient implementation, avoiding leaks and copies by design
 
