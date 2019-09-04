@@ -39,6 +39,7 @@ A successful API should:
  * Restrict access to local font data to Secure Contexts and to only the top-most frame by default via the [Feature Policy](https://wicg.github.io/feature-policy) spec
  * Be available from Workers
  * Enable a memory efficient implementation, avoiding leaks and copies by design
+ * Shield applications from unnecessary complexity by requiring that browser implementations produce valid OpenType data in the returned tables
 
 #### Possible/Future Goals
 
@@ -52,7 +53,7 @@ These APIs will not try to:
  * Describe or provide full access to an existing WOFF/TTF/PS parser.
  * Provide access to the underlying WOFF/TTF/PS font files or describe their locations on disk.
  * Provide a guarantee that the set of available tables or their content matches the font on disk byte to byte.
- * Normalize differences in processed font tables across browser implementations. The font tables that will be exposed will have been processed by browser-provided parsers, but we will not describe or constrain them. For instance, if a library like [OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) reduces the available information for a font, this spec will not require implementations to do more than they already would or provide alternative ways of getting such information back from the source font files.
+ * Normalize differences in processed font tables across browser implementations. The font tables that will be exposed will have been processed by browser-provided parsers, but we will not describe or constrain them except to say that their output will continue to be in a valid OpenType format. For instance, if a library like [OTS](https://chromium.googlesource.com/external/ots/+/master/docs/DesignDoc.md) reduces the available information for a font, this spec will not require implementations to do more than they already would or provide alternative ways of getting such information back from the source font files.
 
 ## Key scenarios
 
